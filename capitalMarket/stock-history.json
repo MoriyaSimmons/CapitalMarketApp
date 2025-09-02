@@ -38,4 +38,8 @@
   "symbol" : "AAPL",
   "currentPrice" : 232.14,
   "totalValue" : 232.14
+}, {
+  "symbol" : "AAPL",
+  "currentPrice" : 232.14,
+  "totalValue" : 1857.12
 } ]

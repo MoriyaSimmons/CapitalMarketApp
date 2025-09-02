@@ -2,7 +2,7 @@
 <html lang="he">
 <head>
   <meta charset="UTF-8" />
-  <title>בדיקת מניות</title>
+  <title>ערך תיק השקעות</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,13 +31,33 @@
     .error {
       color: red;
     }
+	button#submitBtn {
+	  color: black;
+	  padding: 12px 24px;
+	  border: none;
+	  border-radius: 8px;
+	  font-size: 16px;
+	  cursor: pointer;
+	  transition: background-color 0.3s ease, transform 0.2s ease;
+	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	button#submitBtn:hover {
+	  background-color: #45a049;
+	  transform: scale(1.03);
+	}
+
+	button#submitBtn:active {
+	  transform: scale(0.98);
+	}
+
   </style>
 </head>
 <body>
-  <h2>בדיקת מניות לפי שם וכמות</h2>
+  <h2>ערך תיק השקעות</h2>
 
   <div>
-    <label>שם מניה:</label><br />
+    <label>מניה:</label><br />
     <input
       type="text"
       id="stockNames"
@@ -51,9 +71,9 @@
     <input type="number" id="quantity" min="1" />
   </div>
 
-  <button id="submitBtn">חשב</button>
+  <button id="submitBtn"> חשב ערך</button>
 
-  <h3>תוצאות:</h3>
+  <h3>חישוב ערך מניה:</h3>
   <div id="results" class="result"></div>
 
   <h3>היסטוריה:</h3>
@@ -72,7 +92,7 @@
 	  }
 
 	  const request = {
-	    symbol: namesInput, // לדוגמה: "AAPL,TSLA"
+	    symbol: namesInput,
 	    quantity: quantityInput,
 	  };
 
@@ -96,8 +116,7 @@
 	        .map((stock) => {
 	          if (
 	            stock.currentPrice === -1 ||
-	            stock.totalValue === -1 ||
-	            stock.price === -1 // גיבוי לשם שדה שונה
+	            stock.totalValue === -1 
 	          ) {
 	            return `
 	              <div class="entry">
@@ -115,15 +134,13 @@
 	          const price =
 	            stock.currentPrice !== undefined
 	              ? stock.currentPrice.toFixed(2)
-	              : stock.price !== undefined
-	              ? stock.price.toFixed(2)
 	              : "N/A";
 
 	          return `
 	            <div class="entry">
-	              <div><strong>שם:</strong> ${stock.symbol}</div>
+	              <div><strong>מניה:</strong> ${stock.symbol}</div>
 	              <div><strong>מחיר נוכחי:</strong> ${price}</div>
-	              <div><strong>מחיר כולל:</strong> ${total}</div>
+	              <div><strong>ערך כולל:</strong> ${total}</div>
 	              <hr>
 	            </div>
 	          `;
@@ -154,9 +171,9 @@
               const price = entry.currentPrice !== undefined ? entry.currentPrice.toFixed(2) : "N/A";
               return `
                 <div class="history-entry">
-                  <div><strong>שם:</strong> ${entry.symbol}</div>
+                  <div><strong>מניה:</strong> ${entry.symbol}</div>
                   <div><strong>מחיר נוכחי:</strong> ${price}</div>
-                  <div><strong>מחיר כולל:</strong> ${total}</div>
+                  <div><strong>ערך כולל:</strong> ${total}</div>
                   <hr>
                 </div>
               `;
@@ -171,7 +188,7 @@
         });
     }
 
-    // טען היסטוריה כשהדף נטען
+    // טוען היסטוריה כשהדף נטען
     window.addEventListener("DOMContentLoaded", loadHistory);
   </script>
 </body>
