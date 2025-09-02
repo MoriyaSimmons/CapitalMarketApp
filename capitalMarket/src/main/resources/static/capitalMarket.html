@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <title>בדיקת מניות</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      padding: 20px;
+    }
+    input {
+      margin: 5px;
+    }
+    .result, .history {
+      margin-top: 10px;
+      padding: 0;
+      border: none;
+    }
+    .result div {
+      margin-bottom: 12px;
+    }
+    .history-entry {
+      margin-bottom: 15px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 8px 0;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>בדיקת מניות לפי שם וכמות</h2>
+
+  <div>
+    <label>שם מניה:</label><br />
+    <input
+      type="text"
+      id="stockNames"
+      placeholder="למשל: AAPL,TSLA,MSFT"
+      style="width: 300px;"
+    />
+  </div>
+
+  <div>
+    <label>כמות:</label><br />
+    <input type="number" id="quantity" min="1" />
+  </div>
+
+  <button id="submitBtn">חשב</button>
+
+  <h3>תוצאות:</h3>
+  <div id="results" class="result"></div>
+
+  <h3>היסטוריה:</h3>
+  <div id="history" class="history"></div>
+
+  <script>
+    document.getElementById("submitBtn").addEventListener("click", submitStocks);
+
+	function submitStocks() {
+	  const namesInput = document.getElementById("stockNames").value.trim();
+	  const quantityInput = parseInt(document.getElementById("quantity").value);
+
+	  if (!namesInput || isNaN(quantityInput) || quantityInput <= 0) {
+	    document.getElementById("results").innerHTML = '<div class="error">אנא מלא את כל השדות כראוי</div>';
+	    return;
+	  }
+
+	  const request = {
+	    symbol: namesInput, // לדוגמה: "AAPL,TSLA"
+	    quantity: quantityInput,
+	  };
+
+	  fetch("/calculate", {
+	    method: "POST",
+	    headers: { "Content-Type": "application/json" },
+	    body: JSON.stringify(request),
+	  })
+	    .then((res) => {
+	      if (!res.ok) throw new Error("שגיאה בתקשורת עם השרת");
+	      return res.json();
+	    })
+	    .then((data) => {
+	      if (!Array.isArray(data)) {
+	        document.getElementById("results").innerHTML =
+	          '<div class="error">שגיאה בקבלת הנתונים</div>';
+	        return;
+	      }
+
+	      const output = data
+	        .map((stock) => {
+	          if (
+	            stock.currentPrice === -1 ||
+	            stock.totalValue === -1 ||
+	            stock.price === -1 // גיבוי לשם שדה שונה
+	          ) {
+	            return `
+	              <div class="entry">
+	                <div><strong>שם:</strong> ${stock.symbol}</div>
+	                <div style="color: red;"><strong>שגיאה:</strong> שם מניה לא תקין או לא נמצא</div>
+	                <hr>
+	              </div>
+	            `;
+	          }
+
+	          const total =
+	            stock.totalValue !== undefined
+	              ? stock.totalValue.toFixed(2)
+	              : "N/A";
+	          const price =
+	            stock.currentPrice !== undefined
+	              ? stock.currentPrice.toFixed(2)
+	              : stock.price !== undefined
+	              ? stock.price.toFixed(2)
+	              : "N/A";
+
+	          return `
+	            <div class="entry">
+	              <div><strong>שם:</strong> ${stock.symbol}</div>
+	              <div><strong>מחיר נוכחי:</strong> ${price}</div>
+	              <div><strong>מחיר כולל:</strong> ${total}</div>
+	              <hr>
+	            </div>
+	          `;
+	        })
+	        .join("");
+
+	      document.getElementById("results").innerHTML = output;
+	      loadHistory();
+	    })
+	    .catch((err) => {
+	      document.getElementById("results").innerHTML = `<div class="error">${err.message}</div>`;
+	    });
+	}
+
+    function loadHistory() {
+      fetch("/calculate/history")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!Array.isArray(data) || data.length === 0) {
+            document.getElementById("history").innerHTML =
+              '<div class="error">אין היסטוריה זמינה</div>';
+            return;
+          }
+
+          const history = data
+            .map((entry) => {
+              const total = entry.totalValue !== undefined ? entry.totalValue.toFixed(2) : "N/A";
+              const price = entry.currentPrice !== undefined ? entry.currentPrice.toFixed(2) : "N/A";
+              return `
+                <div class="history-entry">
+                  <div><strong>שם:</strong> ${entry.symbol}</div>
+                  <div><strong>מחיר נוכחי:</strong> ${price}</div>
+                  <div><strong>מחיר כולל:</strong> ${total}</div>
+                  <hr>
+                </div>
+              `;
+            })
+            .join("");
+
+          document.getElementById("history").innerHTML = history;
+        })
+        .catch((err) => {
+          document.getElementById("history").innerHTML =
+            '<div class="error">שגיאה בטעינת היסטוריה</div>';
+        });
+    }
+
+    // טען היסטוריה כשהדף נטען
+    window.addEventListener("DOMContentLoaded", loadHistory);
+  </script>
+</body>
+</html>

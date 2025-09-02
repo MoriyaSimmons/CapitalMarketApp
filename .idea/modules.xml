@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/capitalMarket/capitalMarket.iml" filepath="$PROJECT_DIR$/capitalMarket/capitalMarket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/capitalMarketB.iml" filepath="$PROJECT_DIR$/.idea/capitalMarketB.iml" />
+    </modules>
+  </component>
+</project>

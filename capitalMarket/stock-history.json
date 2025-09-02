@@ -1,0 +1,41 @@
+[ {
+  "symbol" : "AAPL",
+  "currentPrice" : 232.14,
+  "totalValue" : 464.28
+}, {
+  "symbol" : "TSLA",
+  "currentPrice" : 333.87,
+  "totalValue" : 1001.61
+}, {
+  "symbol" : "AAPL",
+  "currentPrice" : 232.14,
+  "totalValue" : 696.42
+}, {
+  "symbol" : "TSLA",
+  "currentPrice" : 333.87,
+  "totalValue" : 1001.61
+}, {
+  "symbol" : "AAPL",
+  "currentPrice" : 232.14,
+  "totalValue" : 696.42
+}, {
+  "symbol" : "MSFT",
+  "currentPrice" : 506.69,
+  "totalValue" : 2533.45
+}, {
+  "symbol" : "כגכגכ",
+  "currentPrice" : -1.0,
+  "totalValue" : -5.0
+}, {
+  "symbol" : "יכעיכעיכעי",
+  "currentPrice" : -1.0,
+  "totalValue" : -5.0
+}, {
+  "symbol" : "שששש",
+  "currentPrice" : -1.0,
+  "totalValue" : -1.0
+}, {
+  "symbol" : "AAPL",
+  "currentPrice" : 232.14,
+  "totalValue" : 232.14
+} ]
